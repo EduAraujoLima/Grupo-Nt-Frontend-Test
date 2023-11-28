@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator nestjsDto {
+  provider                        = "prisma-generator-nestjs-dto"
+  output                          = "../src/generated/nestjs-dto"
+  outputToNestJsResourceStructure = "false"
+  flatResourceStructure           = "false"
+  exportRelationModifierClasses   = "true"
+  reExport                        = "false"
+  dtoSuffix                       = "Dto"
+  entityPrefix                    = ""
+  entitySuffix                    = ""
+  classValidation                 = "false"
+  fileNamingStyle                 = "camel"
+  noDependencies                  = "false"
+  outputType                      = "class"
+  prettier                        = "false"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Curso {
+  id          Int       @id @default(autoincrement())
+  nome        String
+  dataCriacao DateTime  @default(now())
+  descricao   String
+  capa        String?
+  categoria   Categoria @relation(fields: [categoriaId], references: [id])
+  categoriaId Int
+  eixo        Eixo      @relation(fields: [eixoId], references: [id])
+  eixoId      Int
+}
+
+model Categoria {
+  id        Int     @id @default(autoincrement())
+  nome      String
+  Curso     Curso[]
+}
+
+model Eixo {
+  id        Int     @id @default(autoincrement())
+  nome      String
+  Curso     Curso[]
+}
